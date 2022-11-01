@@ -1,17 +1,69 @@
 ﻿@inherits LayoutComponentBase
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
+    <div class="header">
+        <MudAppBar Color="Color.Primary" Fixed="false">
+            <MudMenu Label='@LayoutService.MenuLabel' FullWidth="true" Class="header-menu" Color="Color.Secondary"
+                Variant="Variant.Outlined" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft">
+                <MudNavLink Href="/">Home</MudNavLink>
+                <MudNavLink Href="/contact">Contact</MudNavLink>
+                <MudNavLink Href="/about">About</MudNavLink>
+            </MudMenu>
+            <MudSpacer />
+            <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" />
+        </MudAppBar>
     </div>
-
     <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
+        @Body
     </main>
 </div>
+
+
+<MudThemeProvider @ref="@_mudThemeProvider" Theme="@LayoutService.CurrentTheme" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+@code {
+    [Inject]
+    public LayoutService LayoutService { get; set; }
+    private MudThemeProvider _mudThemeProvider;
+
+    protected override void OnInitialized()
+    {
+        LayoutService.MajorUpdateOccurred += LayoutServiceOnMajorUpdateOccurred;
+        base.OnInitialized();
+        LayoutService.SetBaseTheme(LexTheme.MainTheme());
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (firstRender)
+        {
+            //await ApplyUserPreferences();
+            StateHasChanged();
+        }
+    }
+
+    // private async Task ApplyUserPreferences()
+    //{
+    // var defaultDarkMode = await _mudThemeProvider.GetSystemPreference();
+    // await LayoutService.ApplyUserPreferences(false);
+    //}
+
+    public void Dispose()
+    {
+        LayoutService.MajorUpdateOccurred -= LayoutServiceOnMajorUpdateOccurred;
+    }
+
+    private void LayoutServiceOnMajorUpdateOccurred(object sender, EventArgs e) => StateHasChanged();
+
+}
+
+
+<style>
+    .header-menu {
+        width: 250px;
+    }
+</style>
