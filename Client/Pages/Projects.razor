@@ -1,0 +1,28 @@
+@page "/projects"
+@layout MainLayout
+
+<PageTitle>Projects</PageTitle>
+
+<h2>Project Name</h2>
+<img src="" alt="abstract-background-img">
+<p></p>
+
+<h2>Project Name</h2>
+<img src="" alt="abstract-background-img">
+<p></p>
+
+<h2>Project Name</h2>
+<img src="" alt="abstract-background-img">
+<p></p>
+
+
+
+@code {
+  [Inject]
+  public LayoutService LayoutService { get; set; }
+  protected override async Task OnInitializedAsync()
+  {
+    await base.OnInitializedAsync();
+    LayoutService.MenuLabel = "projects";
+  }
+}

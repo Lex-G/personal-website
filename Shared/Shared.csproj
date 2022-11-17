@@ -1,8 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>BlazorApp.Shared</RootNamespace>
+    <RootNamespace>Shared</RootNamespace>
   </PropertyGroup>
-
+  <ItemGroup>
+    <PackageReference Include="SendGrid" Version="9.25.3" />
+  </ItemGroup>
 </Project>

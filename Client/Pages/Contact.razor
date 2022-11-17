@@ -1,0 +1,25 @@
+@page "/contact"
+@layout MainLayout
+
+<PageTitle>Contact Me</PageTitle>
+
+<h1>Contact Me</h1>
+<img src="" alt="abstract-background-image">
+<form action="">
+  <input type="text" placeholder="name" />
+  <input type="text" placeholder="phone number" />
+  <input type="text" placeholder="e-mail" />
+  <input type="text" placeholder="message" />
+  <button>SUBMIT</button>
+</form>
+
+
+@code {
+  [Inject]
+  public LayoutService LayoutService { get; set; }
+  protected override async Task OnInitializedAsync()
+  {
+    await base.OnInitializedAsync();
+    LayoutService.MenuLabel = "projects";
+  }
+}

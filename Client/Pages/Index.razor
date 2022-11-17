@@ -1,9 +1,140 @@
-﻿@page "/"
+﻿@layout MainLayout
+@page "/"
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Lex Designs</PageTitle>
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-10 container">
+  <MudPaper Elevation="3" Outlined="true" Class="main-content" style="@mainContentBackgroundImage" MinHeight="200px"
+    MinWidth="200px">
+    <div Class="right-content">
+      <h1>Lex Grunewald</h1>
+      <p>Front-end developer with an eye for beauty, a passion for usability and an insatiable thirst for knowledge. A
+        Jack of All Trades, Taurus moon and fantasy novel lover.</p>
+    </div>
+    <div Class="left-content">
+      <img src="" alt="lex-photo">
+      <button>DOWNLOAD RESUME</button>
+    </div>
+  </MudPaper>
 
-<h1>Hello, world!</h1>
+  <MudStack Spacing="16" Row="true" Class="mt-7" AlignItems="AlignItems.Center" Justify="Justify.Center">
+    <MudPaper Class="pa-3" style="@mainContentBackgroundColor" @onclick="OnProjectDetailClick">
+      <h2>VIVE</h2>
+      <img src="" alt="">
+    </MudPaper>
+    <MudPaper Class="pa-3" style="@mainContentBackgroundColor">
+      <h2>Aviation Resources</h2>
+      <img src="" alt="">
+    </MudPaper>
+    <MudPaper Class="pa-3" style="@mainContentBackgroundColor">
+      <h2>Helia</h2>
+      <img src="" alt="">
+    </MudPaper>
+  </MudStack>
 
-Welcome to your new app.
+
+</MudContainer>
+
+@code {
+  [Inject] public LayoutService LayoutService { get; set; }
+  [Inject] public NavigationManager NavigationManager { get; set; }
+
+  protected string mainContentBackgroundColor { get; set; }
+  protected string mainContentBackgroundImage { get; set; }
+
+  protected override void OnInitialized()
+  {
+    base.OnInitialized();
+    mainContentBackgroundColor = $"background-color: {LayoutService.CurrentTheme.Palette.Secondary.Value};";
+    mainContentBackgroundImage = "background-image: url(/images/abstract.png)";
+    LayoutService.MenuLabel = "home";
+
+  }
+
+  protected void OnProjectDetailClick()
+  {
+    NavigationManager.NavigateTo("/projects", forceLoad: false);
+  }
 
 
+
+}
+
+<style>
+  .container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .main-content {
+    width: 90%;
+    height: 20rem;
+    align-self: center;
+    display: flex;
+    flex-direction: row-reverse;
+    padding: 3rem;
+    box-shadow: -5px 6px rgba(44, 26, 19, .5);
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    color: #2C1A13;
+  }
+
+  .right-content {
+    width: 50%;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .right-content img {
+    width: 200px;
+    height: 200px;
+    border-radius: 100%;
+  }
+
+  h1 {
+    font-family: 'Inter', sans-serif;
+    margin-bottom: 1.5rem;
+
+  }
+
+  .left-content {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  }
+
+  button {
+    width: 6rem;
+    height: 15px;
+    background-color: #F6EEE0;
+    font-size: xx-small;
+    position: relative;
+    bottom: 0;
+    border-radius: 50px;
+    margin-top: 3rem;
+    color: #A45C40;
+  }
+
+  h2 p {
+    font-family: 'DM Serif Display', serif;
+  }
+
+  .pa-3 {
+    margin-top: 5rem;
+    box-shadow: -2px 4px rgba(44, 26, 19, .5);
+    height: 10rem;
+    width: 33%;
+    align-items: center;
+    text-align: center;
+    font-size: smaller;
+    color: #2C1A13;
+  }
+
+
+  h2 {
+    font-weight: 100;
+    align-self: center;
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  }
+</style>
