@@ -1,33 +1,31 @@
 ﻿@inherits LayoutComponentBase
 
 <div class="page">
-    <div class="header mb-2">
-        <MudAppBar Color="Color.Primary" Fixed="false">
-            <MudGrid Class="appbar-grid" Spacing="2">
-                <MudItem xs="4" Class="">
-                    <MudMenu Label='@LayoutService.MenuLabel' FullWidth="true" Class="header-menu"
-                        Color="Color.Secondary" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomLeft"
+    <div class="header">
+        <MudPaper Class="mud-theme-primary" Width="100%" Square="true">
+            <MudStack Spacing="16" Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                <div class="pl-8 menu">
+                    <MudMenu Label='@LayoutService.MenuLabel' FullWidth="true" FullHeight="true" Color="Color.Secondary"
+                    Variant="Variant.Filled" AnchorOrigin="Origin.BottomLeft"
                         TransformOrigin="Origin.TopLeft">
                         <MudNavLink Href="/">Home</MudNavLink>
                         <MudNavLink Href="/contact">Contact</MudNavLink>
                         <MudNavLink Href="/about">About</MudNavLink>
                         <MudNavLink Href="/projects">Projects</MudNavLink>
                     </MudMenu>
-                </MudItem>
-                <MudItem xs="4" Class="">
-                    <MudText Typo="Typo.body1" Align="Align.Center">
-                        <div class="logo-container">
-                            <div class="left">Lex</div>
-                            <div class="right">Designs</div>
-                        </div>
-                    </MudText>
-                </MudItem>
-                <MudItem xs="4" Class="">
-                    <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" />
-                </MudItem>
-            </MudGrid>
+                </div>
+                <MudText Typo="Typo.body1" Align="Align.Center">
+                    <div class="logo-container">
+                        <div class="left">Lex</div>
+                        <div class="right">Designs</div>
+                    </div>
+                </MudText>
 
-        </MudAppBar>
+                <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Class="github-button" />
+
+            </MudStack>
+
+        </MudPaper>
 
     </div>
     <main>
@@ -80,14 +78,9 @@
 
 
 <style>
-    .header {
-        display: flex;
-        justify-content: space-evenly;
-        align-items: center;
-    }
-
-    .mud-button-root {
-        margin-left: 2rem;
+    .menu {
+        height: 15px;
+        width: 40px;
     }
 
     .logo-container {
@@ -104,22 +97,5 @@
         font-family: 'DM Serif Display', serif;
         display: flex;
         justify-content: right;
-    }
-
-    .header-menu {
-        width: 100px;
-    }
-
-    .appbar-grid {
-        align-items: center;
-
-    }
-
-    .text-center {
-        text-align: center !important;
-    }
-
-    .text-center>.mud-nav-link .mud-nav-link-text {
-        text-align: center !important;
     }
 </style>

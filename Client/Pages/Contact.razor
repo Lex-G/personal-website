@@ -1,25 +1,111 @@
 @page "/contact"
+@using System.ComponentModel.DataAnnotations
+@using System.Text.Json
 @layout MainLayout
+
 
 <PageTitle>Contact Me</PageTitle>
 
 <h1>Contact Me</h1>
 <img src="" alt="abstract-background-image">
-<form action="">
-  <input type="text" placeholder="name" />
-  <input type="text" placeholder="phone number" />
-  <input type="text" placeholder="e-mail" />
-  <input type="text" placeholder="message" />
-  <button>SUBMIT</button>
-</form>
+<MudContainer MaxWidth="MaxWidth.Small">
+  <MudPaper Class="contact-us-email-form-wrapper" Elevation="2">
+    <MudForm Class="contact-us-email-form" @ref="_form" @bind-IsValid="@_success" @bind-Errors="@_errors">
+      <MudTextField Placeholder="Name" @bind-Value="@EmailRequest.Name" T="string" Variant="Variant.Filled" Label="Name"
+        Clearable="true" Required="true" RequiredError="Name is required!" />
+
+      <MudTextField Placeholder="Email" @bind-Value="@EmailRequest.Email" T="string" Variant="Variant.Filled"
+        Label="Email" Required="true" Clearable="true" RequiredError="Email is required!"
+        Validation="@(new EmailAddressAttribute() { ErrorMessage = "The email address is invalid" })" />
+
+      <MudTextField Placeholder="Phone Number" @bind-Value="@EmailRequest.PhoneNumber" T="string"
+        Variant="Variant.Filled" Label="Phone Number" Clearable="true" Required="false" />
+
+      <MudTextField Placeholder="Subject" @bind-Value="@EmailRequest.Subject" T="string" Variant="Variant.Filled"
+        Label="Subject" Required="true" Clearable="true" RequiredError="Subject is required!" />
+
+      <MudTextField Placeholder="Message" @bind-Value="@EmailRequest.Message" T="string" Variant="Variant.Filled"
+        Label="Message" Lines="10" Required="true" Clearable="true" RequiredError="Message is required!" />
+
+      <div class="d-flex align-center justify-space-between mt-6">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_success)" Class="ml-auto"
+          OnClick="OnContactSubmit">Send</MudButton>
+      </div>
+    </MudForm>
+  </MudPaper>
+  <MudOverlay Visible="_isSending" DarkBackground="true" Absolute="true">
+    <MudProgressCircular Color="Color.Secondary" Size="Size.Large" Indeterminate="true" />
+  </MudOverlay>
+</MudContainer>
 
 
 @code {
   [Inject]
   public LayoutService LayoutService { get; set; }
+
+  [Inject]
+  private ISnackbar Snackbar { get; set; }
+
+  [Inject]
+  private HttpClient HttpClient { get; set; }
+
+  private bool _success;
+  private string[] _errors = { };
+  private MudForm _form;
+  private EmailRequest EmailRequest { get; set; } = new();
+  private bool _isSending;
+
   protected override async Task OnInitializedAsync()
   {
     await base.OnInitializedAsync();
-    LayoutService.MenuLabel = "projects";
+    LayoutService.MenuLabel = "contact";
   }
+  protected async Task OnContactSubmit()
+  {
+    try
+    {
+      _isSending = true;
+
+      var request = new StringContent(JsonSerializer.Serialize(EmailRequest, new JsonSerializerOptions()
+      {
+        PropertyNameCaseInsensitive = true,
+        WriteIndented = true
+      }));
+      var response = await HttpClient.PostAsync("/api/SendEmail", request);
+      Console.WriteLine("response");
+      Console.WriteLine(response);
+      //await Task.Delay(1500);
+
+      _isSending = false;
+      if (response.IsSuccessStatusCode)
+      {
+        Snackbar.Add("Email Sent", Severity.Info);
+        //TODO: After successful sending reset the contact state
+        _form.Reset();
+      }
+      else
+      {
+        throw new Exception("Unable to send email");
+      }
+
+    }
+    catch (Exception)
+    {
+      _isSending = false;
+      Snackbar.Add("Unable to send email, please try again or email us directly at support@lithe.technology", Severity.Error);
+    }
+  }
+
 }
+
+<style>
+  .contact-us-email-form-wrapper {
+    background-color: var(--mud-palette-secondary);
+    /width: 35rem;/ align-self: center;
+    padding: 1rem 1rem 1rem 1rem;
+  }
+
+  .contact-us-email-form {
+    padding: 1rem 1rem 1rem 1rem;
+  }
+</style>

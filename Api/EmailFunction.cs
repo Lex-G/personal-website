@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
-using Shared;
+using Core;
+using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace Api;
 
@@ -20,8 +22,17 @@ public class EmailFunction
   }
 
   [FunctionName(nameof(SendEmail))]
-  public static IActionResult SendEmail([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
+  public async Task<IActionResult> SendEmail([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req)
   {
-    return new OkObjectResult(new { });
+    var emailRequest = await JsonSerializer.DeserializeAsync<EmailRequest>(req.Body);
+    var success = await _emailService.SendEmailWithResponse(emailRequest);
+    if (success)
+    {
+      return new OkObjectResult(new { Status = "ok" });
+    }
+    else
+    {
+      return new UnprocessableEntityObjectResult(new { Status = "no" });
+    }
   }
 }
